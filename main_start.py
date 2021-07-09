@@ -9,16 +9,23 @@ from query_api import *
 def main():
 
     # connect to mySQL DB
-    dbConnection = mySQLConnection().createConnection()
+    print("########## CONNECT TO DATABASE ##########")
+    print("Connecting to host server..")
+    try:
+        dbConnection = mySQLConnection().createConnection()
+        print("Successfully connected to host server")
+    except:
+        print("**Error connecting to host server - Terminating Program")
+        return
 
     # create tables if needed
+    print("########## CREATE DATABASE TABLES ##########")
     tables = createTables().createTables()
 
-    # get data
-
-    # populate tables
-    #populateTables().populateSQLTable()
+    # get data and insert/populate tables
+    print("########## GET DATA AND INSERT INTO DATABASE ##########")
     apiQuery = queryResult().queryResultMain()
+
 
 
 

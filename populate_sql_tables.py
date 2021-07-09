@@ -3,7 +3,9 @@ from mysql_connection import *
 
 class populateTables():
 
-    def populateSQLTable(self):
+    def updateSQLTable(self, records, tableName):
+
+        print("Updating table " + tableName + "..")
 
         # connect to database
         db = mySQLConnection().createConnection()
@@ -11,47 +13,40 @@ class populateTables():
         # cursor
         cursor = db.cursor()
 
-        # populate tables
-        #queryResult().queryResultMain()
+        # keep track of items we updated, do not clean them
+        updatedIDList = []
 
-    def insertSQLTable(self, records, tableName):
-
-        try:
-            # connect to database
-            db = mySQLConnection().createConnection()
-
-            # cursor
-            cursor = db.cursor()
-                    
-            # INSERT query
-            '''
-            query = """
-                INSERT INTO `ALL-Movies` (
-                    Content_ID, 
-                    Ranking, 
-                    Content_Type, 
-                    Movie_Title, 
-                    Overview, 
-                    Poster, 
-                    Release_Date, 
-                    Rating, 
-                    Genres, 
-                    Trailer, 
-                    Providers)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """
-            '''
-
-            # insert each record into the sql tableName
-            query = "INSERT INTO `" + tableName + "` "
-            query += "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        # update each record in the table, if it does not exist create it, else update it
+        for record in records:
             
-            # execute query on records
-            cursor.executemany(query, records)
+            query = '''
+                    REPLACE INTO `%s`
+                    SET Content_ID = '%s', Ranking = '%s', Content_Type = '%s', Movie_Title = %s, 
+                        Overview = %s, Poster = '%s', Release_Date = '%s', Rating = '%s', 
+                        Genres = '%s', Trailer = '%s', Providers = %s
+            ''' % (tableName, record[0], record[1], record[2], repr(record[3]), repr(record[4]), record[5], record[6], record[7], record[8], record[9], repr(record[10]))
+            
+            updatedIDList.append(record[0]) # add id to updated list
 
-            # commit
-            db.commit()
-            db.close()
+            cursor.execute(query)
 
-        except:
-            return
+        # commit
+        db.commit()
+
+        updatedIDTuple = tuple(updatedIDList)
+        
+        # clean up table, delete items that were not recently inserted/updated -> delete items not in the updatedIDTuple
+        print("Cleaning up " + tableName + "..")
+
+        query = '''
+                DELETE FROM `%s`
+                WHERE Content_ID NOT IN %s
+        ''' % (tableName, str(updatedIDTuple))
+
+        cursor.execute(query)
+
+        # commit
+        db.commit()
+        
+        db.close()
+

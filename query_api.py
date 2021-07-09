@@ -14,8 +14,6 @@ class queryResult():
 
     def queryResultMain(self):
 
-        #sqlInsertTest = populateTables()
-
         # api url/key object
         tmdbAPI = apiKeys()
 
@@ -35,43 +33,47 @@ class queryResult():
         trendingTVShowsWeeklyLink = queryLink.getTrendingTVShowsWeeklyLink()
 
         # set total pages to go through
-        totalPages = 1
+        totalPages = 10
 
-        print("############# MOVIES #############")
+        # content types
+        contentMovie = "Movie"
+        contentTV = "TV Show"
+
+        print("--- MOVIES ---")
         print("Getting Popular Movies... ")
-        #self.getQueryResults(popularMoviesLink, "movie", totalPages, "ALL-Movies")
-        self.getQueryResults(popularMoviesLink, "movie", totalPages, "popular-Movies")
+        #self.getQueryResults(popularMoviesLink, contentMovie, totalPages, "ALL-Movies")
+        self.getQueryResults(popularMoviesLink, contentMovie, totalPages, "popular-Movies")
 
         print("Getting Upcoming Movies...")
-        self.getQueryResults(upcomingMoviesLink, "movie", totalPages, "upcoming-Movies")
+        self.getQueryResults(upcomingMoviesLink, contentMovie, totalPages, "upcoming-Movies")
 
         print("Getting Now Playing Movies...")
-        self.getQueryResults(nowPlayingMoviesLink, "movie", totalPages, "now-Playing-Movies")
+        self.getQueryResults(nowPlayingMoviesLink, contentMovie, totalPages, "now-Playing-Movies")
 
         print("Getting Top Rated Movies...")
-        self.getQueryResults(topRatedMoviesLink, "movie", totalPages, "top-Rated-Movies")
+        self.getQueryResults(topRatedMoviesLink, contentMovie, totalPages, "top-Rated-Movies")
 
-        #print("Getting Trending Today Movies...")
-        #self.getQueryResults(trendingMoviesTodayLink, "movie", totalPages, "trending-Today-Movies")
+        print("Getting Trending Today Movies...")
+        self.getQueryResults(trendingMoviesTodayLink, contentMovie, totalPages, "trending-Today-Movies")
 
-        #print("Getting Trending Weekly Movies...")
-        #self.getQueryResults(trendingMoviesWeeklyLink, "movie", totalPages, "trending-Weekly-Movies")
+        print("Getting Trending Weekly Movies...")
+        self.getQueryResults(trendingMoviesWeeklyLink, contentMovie, totalPages, "trending-Weekly-Movies")
 
-        print("############# TV SHOWS #############")
+        print("--- TV SHOWS ---")
         print("Getting Popular TV Shows...")
-        self.getQueryResults(popularTVShowsLink, "tv", totalPages, "ALL-TV-Shows")
-        self.getQueryResults(popularTVShowsLink, "tv", totalPages, "popular-TV-Shows")
+        #self.getQueryResults(popularTVShowsLink, contentTV, totalPages, "ALL-TV-Shows")
+        self.getQueryResults(popularTVShowsLink, contentTV, totalPages, "popular-TV-Shows")
 
         print("Getting Top Rated TV Shows...")
-        self.getQueryResults(topRatedTVShowsLink, "tv", totalPages, "top-Rated-TV-Shows")
+        self.getQueryResults(topRatedTVShowsLink, contentTV, totalPages, "top-Rated-TV-Shows")
 
-        #print("Getting Trending Today TV Shows...")
-        #self.getQueryResults(trendingTVShowsTodayLink, "tv", totalPages, "trending-Today-TV-Shows")
+        print("Getting Trending Today TV Shows...")
+        self.getQueryResults(trendingTVShowsTodayLink, contentTV, totalPages, "trending-Today-TV-Shows")
 
-        #print("Getting Trending Weekly TV Shows...")
-        #self.getQueryResults(trendingTVShowsWeeklyLink, "tv", totalPages, "trending-Weekly-TV-Shows")
+        print("Getting Trending Weekly TV Shows...")
+        self.getQueryResults(trendingTVShowsWeeklyLink, contentTV, totalPages, "trending-Weekly-TV-Shows")
 
-        print("All databases inserted")
+        print("####### All databases inserted #######")
 
 
     def getQueryResults(self, link, contentType, totalPages, sqlTable):
@@ -104,6 +106,7 @@ class queryResult():
         # get all the results on the current page for all totalPages
         for pageNumber in range(1, totalPages + 1):
             #print("PAGE # " + str(pageNumber))
+
             # get all the api data for each result on the current page (20 results per page 0->19)
             for pageIndex in range(0, resultCount):
 
@@ -182,7 +185,7 @@ class queryResult():
                 #print("Trailer: " + str(trailer))
                 #print("Providers: " + str(providers))
 
-                # add results to list, list will be inserted into sql table
+                # add results to a record list, this list will be inserted into sql table
                 records.append((contentID, ranking, contentType, title, overview, poster, releaseDate, rating, genres, trailer, str(providers)))
                 ranking += 1
                
@@ -206,13 +209,13 @@ class queryResult():
                 resultCount += 1
 
         #print(records[0][0])
+        #print(records[0])
 
-        sqlInsert = populateTables()
-        sqlInsert.insertSQLTable(records, sqlTable)
+        # sql table queries object
+        sqlDB = populateTables()
 
-
-
-
+        # insert/update data in database from records
+        sqlDB.updateSQLTable(records, sqlTable)
 
 
 
@@ -550,6 +553,13 @@ class queryResult():
         # api url/key object
         tmdbAPI = apiKeys()
         
+        # convert content type to lower case/reformat for link
+        if contentType == "Movie":
+            contentType = "movie"
+
+        elif contentType == "TV Show":
+            contentType = "tv"
+
         # format ID -> ex. "/1234" | format content -> ex. "/movie" or "/tv"
         contentIDFormatted = "/" + str(contentID)
         contentTypeFormatted = "/" + contentType
@@ -606,6 +616,13 @@ class queryResult():
         # api url/key object
         tmdbAPI = apiKeys()
         
+        # convert content type to lower case/reformat for link
+        if contentType == "Movie":
+            contentType = "movie"
+
+        elif contentType == "TV Show":
+            contentType = "tv"
+
         # format ID -> ex. "/1234" | format content -> ex. "/movie" or "/tv"
         contentIDFormatted = "/" + str(contentID)
         contentTypeFormatted = "/" + contentType

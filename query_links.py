@@ -22,11 +22,11 @@ class queryAPILinks():
         return topRatedMoviesLink
 
     def getTrendingMoviesTodayLink(self):
-        trendingMoviesTodayLink = "https://api.themoviedb.org/3/trending/movie/day" + self.tmdbAPI.getAPIKey() 
+        trendingMoviesTodayLink = "https://api.themoviedb.org/3/trending/movie/day" + self.tmdbAPI.getAPIKey() + "&language=en-US&page="
         return trendingMoviesTodayLink
 
     def getTrendingMoviesWeeklyLink(self):
-        trendingMoviesWeeklyLink = "https://api.themoviedb.org/3/trending/movie/week" + self.tmdbAPI.getAPIKey()
+        trendingMoviesWeeklyLink = "https://api.themoviedb.org/3/trending/movie/week" + self.tmdbAPI.getAPIKey() + "&language=en-US&page="
         return trendingMoviesWeeklyLink
 
     def getPopularTVShowsLink(self):
@@ -38,9 +38,9 @@ class queryAPILinks():
         return topRatedTVShowsLink
 
     def getTrendingTVShowsTodayLink(self):
-        trendingTVShowsTodayLink = "https://api.themoviedb.org/3/trending/tv/day" + self.tmdbAPI.getAPIKey()
+        trendingTVShowsTodayLink = "https://api.themoviedb.org/3/trending/tv/day" + self.tmdbAPI.getAPIKey() + "&language=en-US&page="
         return trendingTVShowsTodayLink
 
     def getTrendingTVShowsWeeklyLink(self):
-        trendingTVShowsWeeklyLink = "https://api.themoviedb.org/3/trending/tv/week" + self.tmdbAPI.getAPIKey()
+        trendingTVShowsWeeklyLink = "https://api.themoviedb.org/3/trending/tv/week" + self.tmdbAPI.getAPIKey() + "&language=en-US&page="
         return trendingTVShowsWeeklyLink

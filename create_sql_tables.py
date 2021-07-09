@@ -19,8 +19,11 @@ class createTables():
             
         # create a table for each table in tableNames if it does not exist
         for item in tableNames:
-            query = "CREATE TABLE IF NOT EXISTS `" + item + "` "
-            query += """(Content_ID INT PRIMARY KEY NOT NULL,
+            print("Creating table " + item)
+            
+            query = '''
+                    CREATE TABLE IF NOT EXISTS `%s`
+                    (Content_ID INT PRIMARY KEY NOT NULL,
                         Ranking INT NOT NULL,
                         Content_Type VARCHAR(7), 
                         Movie_Title TEXT,
@@ -30,8 +33,11 @@ class createTables():
                         Rating VARCHAR(3),
                         Genres TEXT,
                         Trailer TEXT,
-                        Providers TEXT)"""
+                        Providers TEXT)
+            ''' % (item)
+
             cursor.execute(query)
 
+        # commit
         db.commit()
-        #db.close()
+        db.close()
